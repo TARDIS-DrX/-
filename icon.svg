@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title">
+  <title id="title">帧录图标</title>
+  <rect width="256" height="256" rx="54" fill="#111914"/>
+  <path d="M70 88V70h18M168 70h18v18M186 168v18h-18M88 186H70v-18"
+        fill="none" stroke="#F5F7F2" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="128" cy="128" r="34" fill="#FF5C4D"/>
+  <circle cx="117" cy="117" r="8" fill="#FFB2A9" opacity=".72"/>
+  <path d="M96 160h64" fill="none" stroke="#8DE5A1" stroke-width="10" stroke-linecap="round"/>
+  <path d="M107 173h42" fill="none" stroke="#8DE5A1" stroke-width="6" stroke-linecap="round" opacity=".7"/>
+</svg>

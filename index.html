@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#111914">
+    <meta name="description" content="帧录是一款完全在本机运行的轻量屏幕录制工具。">
+    <title>帧录 · 本地屏幕录制</title>
+    <link rel="icon" href="icon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body data-recorder-state="idle">
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="/" aria-label="帧录首页">
+          <img src="icon.svg" width="36" height="36" alt="">
+          <span class="brand-name">帧录</span>
+          <span class="brand-version">LOCAL</span>
+        </a>
+
+        <div class="local-badge" aria-label="录制内容仅在本机处理">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M20 13c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V6l8-3 8 3v7Z"></path>
+            <path d="m9 12 2 2 4-4"></path>
+          </svg>
+          <span>仅在本机处理</span>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <section class="studio" aria-labelledby="studio-title">
+          <div class="section-heading">
+            <div>
+              <h1 id="studio-title">取景监视器</h1>
+              <p id="stage-subtitle">等待选择录制画面</p>
+            </div>
+            <div class="status-pill" id="status-pill">
+              <span class="status-dot" aria-hidden="true"></span>
+              <span id="status-label">待机</span>
+            </div>
+          </div>
+
+          <div class="monitor" id="monitor">
+            <div class="monitor-chrome monitor-chrome-top">
+              <div class="live-indicator" aria-hidden="true">
+                <span class="live-dot"></span>
+                <span id="monitor-mode">PREVIEW</span>
+              </div>
+              <div class="monitor-time" id="monitor-time">00:00</div>
+            </div>
+
+            <video id="preview" class="preview" autoplay muted playsinline></video>
+
+            <div class="monitor-empty" id="monitor-empty">
+              <div class="reticle" aria-hidden="true">
+                <span class="reticle-corner corner-tl"></span>
+                <span class="reticle-corner corner-tr"></span>
+                <span class="reticle-corner corner-bl"></span>
+                <span class="reticle-corner corner-br"></span>
+                <span class="reticle-dot"></span>
+              </div>
+              <strong>画面未接入</strong>
+              <span>选择屏幕、窗口或标签页后开始预览</span>
+            </div>
+
+            <div class="monitor-chrome monitor-chrome-bottom">
+              <div class="meta-group">
+                <span class="meta-item">
+                  <svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true">
+                    <rect width="18" height="13" x="3" y="4" rx="2"></rect>
+                    <path d="M8 21h8M12 17v4"></path>
+                  </svg>
+                  <span id="resolution-meta">-- × --</span>
+                </span>
+                <span class="meta-item">
+                  <svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M4 4v16h16"></path>
+                    <path d="m7 15 4-4 3 3 5-6"></path>
+                  </svg>
+                  <span id="fps-meta">-- FPS</span>
+                </span>
+              </div>
+              <span class="codec-meta" id="codec-meta">VP9 / WEBM</span>
+            </div>
+          </div>
+
+          <div class="timeline-ruler" aria-hidden="true">
+            <span class="timeline-label">00</span>
+            <div class="timeline-ticks"></div>
+            <span class="timeline-label">30</span>
+            <div class="timeline-ticks"></div>
+            <span class="timeline-label">60</span>
+            <div class="timeline-ticks"></div>
+            <span class="timeline-label">90</span>
+          </div>
+
+          <section class="result-strip" id="result-strip" aria-labelledby="result-title" hidden>
+            <div class="result-summary">
+              <span class="result-icon" aria-hidden="true">
+                <svg class="icon" viewBox="0 0 24 24">
+                  <path d="m9 12 2 2 4-4"></path>
+                  <circle cx="12" cy="12" r="9"></circle>
+                </svg>
+              </span>
+              <div>
+                <h2 id="result-title">录制已完成</h2>
+                <p><span id="result-duration">00:00</span> · <span id="result-size">0 B</span> · <span id="result-resolution">-- × --</span></p>
+              </div>
+            </div>
+            <div class="result-actions">
+              <button class="button button-secondary" id="record-again-button" type="button">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M3 12a9 9 0 1 0 3-6.7L3 8"></path>
+                  <path d="M3 3v5h5"></path>
+                </svg>
+                重新录制
+              </button>
+              <button class="button button-primary" id="download-button" type="button">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12 3v12"></path>
+                  <path d="m7 10 5 5 5-5"></path>
+                  <path d="M5 21h14"></path>
+                </svg>
+                下载录像
+              </button>
+            </div>
+          </section>
+        </section>
+
+        <aside class="control-panel" aria-labelledby="settings-title">
+          <div class="panel-heading">
+            <div>
+              <h2 id="settings-title">录制设置</h2>
+              <p>浏览器直接编码，无需上传</p>
+            </div>
+            <span class="file-chip">WEBM</span>
+          </div>
+
+          <div class="settings-fieldset" id="settings-fieldset">
+            <div class="setting-block">
+              <div class="setting-label-row">
+                <span class="setting-label">帧率</span>
+                <span id="fps-hint">30 FPS</span>
+              </div>
+              <div class="segmented-control segmented-control-three" role="radiogroup" aria-label="帧率">
+                <label>
+                  <input type="radio" name="fps" value="30" checked>
+                  <span>30</span>
+                </label>
+                <label>
+                  <input type="radio" name="fps" value="60">
+                  <span>60</span>
+                </label>
+                <label>
+                  <input type="radio" name="fps" value="120">
+                  <span>120</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="setting-block">
+              <div class="setting-label-row">
+                <span class="setting-label">画质</span>
+                <span id="quality-hint">均衡</span>
+              </div>
+              <div class="segmented-control segmented-control-three" role="radiogroup" aria-label="画质">
+                <label>
+                  <input type="radio" name="quality" value="compact">
+                  <span>省空间</span>
+                </label>
+                <label>
+                  <input type="radio" name="quality" value="standard" checked>
+                  <span>均衡</span>
+                </label>
+                <label>
+                  <input type="radio" name="quality" value="high">
+                  <span>高清</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="toggle-stack">
+              <label class="toggle-row" for="mic-toggle">
+                <span class="toggle-copy">
+                  <span class="toggle-icon" aria-hidden="true">
+                    <svg class="icon" viewBox="0 0 24 24">
+                      <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path>
+                      <path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v3"></path>
+                    </svg>
+                  </span>
+                  <span>
+                    <strong>麦克风</strong>
+                    <small>录制讲解声音</small>
+                  </span>
+                </span>
+                <span class="switch">
+                  <input id="mic-toggle" type="checkbox">
+                  <span class="switch-track" aria-hidden="true"></span>
+                </span>
+              </label>
+
+              <label class="toggle-row" for="audio-toggle">
+                <span class="toggle-copy">
+                  <span class="toggle-icon" aria-hidden="true">
+                    <svg class="icon" viewBox="0 0 24 24">
+                      <path d="M11 5 6 9H3v6h3l5 4V5Z"></path>
+                      <path d="M15.5 8.5a5 5 0 0 1 0 7"></path>
+                      <path d="M18.5 5.5a9 9 0 0 1 0 13"></path>
+                    </svg>
+                  </span>
+                  <span>
+                    <strong>系统声音</strong>
+                    <small>共享画面中的音频</small>
+                  </span>
+                </span>
+                <span class="switch">
+                  <input id="audio-toggle" type="checkbox" checked>
+                  <span class="switch-track" aria-hidden="true"></span>
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <div class="action-zone">
+            <button class="button button-record" id="start-button" type="button">
+              <span class="record-icon" aria-hidden="true"></span>
+              <span id="start-button-label">开始录制</span>
+            </button>
+
+            <div class="active-actions" id="active-actions" hidden>
+              <button class="button button-secondary" id="pause-button" type="button">
+                <svg class="icon icon-pause" viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M8 5v14M16 5v14"></path>
+                </svg>
+                <svg class="icon icon-play" viewBox="0 0 24 24" aria-hidden="true" hidden>
+                  <path d="m7 4 13 8-13 8V4Z"></path>
+                </svg>
+                <span id="pause-button-label">暂停</span>
+              </button>
+              <button class="button button-stop" id="stop-button" type="button">
+                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <rect width="12" height="12" x="6" y="6" rx="1"></rect>
+                </svg>
+                停止
+              </button>
+            </div>
+
+            <p class="status-message" id="status-message" role="status" aria-live="polite">
+              画面与音频不会离开这台电脑
+            </p>
+          </div>
+
+        </aside>
+      </main>
+
+      <footer class="footer">
+        <span>帧录 v1.1</span>
+        <span>桌面录屏 · 本地优先</span>
+      </footer>
+    </div>
+
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
